@@ -1,0 +1,33 @@
+
+POST http://{{localaddress}}/users
+Content-Type: application/json
+
+{
+  "id": 3,
+  "name": "John Doe",
+  "user_name": "john.doe",
+  "password": "P@ssw0rd"
+}
+
+### Kullanıcı Ekleme
+
+GET http://{{localaddress}}/users
+Accept: application/json
+
+### Kullanıcı Listesi
+
+GET http://{{localaddress}}/users?userName=Ibrahim
+Accept: application/json
+
+### Kullanıcı Listesi User Name filtresi ile
+
+GET http://{{localaddress}}/users/11
+Accept: application/json
+
+### 1 numaralı kullanıcı bilgisinin çekilmesi
+
+GET http://{{localaddress}}/ping
+Accept: application/json
+
+### ping metodunun test edilmesi
+

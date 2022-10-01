@@ -18,6 +18,20 @@ import (
 )
 
 func GETUsers(c *gin.Context) {
+	var returnValue models.User
+	if userName, isExist := c.GetQuery("userName"); isExist {
+		fmt.Println("userName:", userName)
+
+		for _, user := range config.Users {
+			if user.Name == userName {
+				returnValue = user
+			}
+		}
+
+		c.JSON(http.StatusOK, returnValue)
+		return
+	}
+
 	c.JSON(http.StatusOK, config.Users)
 }
 
@@ -27,7 +41,9 @@ func GETUserByID(c *gin.Context) {
 	id, err := strconv.ParseUint(id_, 10, 64)
 	if err != nil {
 		fmt.Println(err.Error())
+		c.JSON(http.StatusBadRequest, "invalid id")
 	}
+
 	fmt.Println(id, id_)
 	for _, user := range config.Users {
 		if user.ID == id {
@@ -44,9 +60,13 @@ func GETUserByID(c *gin.Context) {
 
 func POSTUser(c *gin.Context) {
 	var user models.User
-	c.BindJSON(&user)
+	err := c.BindJSON(&user)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
 	config.Users = append(config.Users, user)
-	c.JSON(http.StatusOK, user)
+	c.JSON(http.StatusCreated, user)
 }
 
 func PUTUser(c *gin.Context) {
@@ -56,7 +76,11 @@ func PUTUser(c *gin.Context) {
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-	c.BindJSON(&user)
+	err = c.BindJSON(&user)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
 	for index, item := range config.Users {
 		if item.ID == id {
 			config.Users[index] = user

@@ -14,9 +14,9 @@ import (
 )
 
 func UsersRoot(api *gin.RouterGroup) {
-	api.GET("/users", controller.GETUsers)
-	api.GET("users/:id", controller.GETUserByID)
-	api.POST("/users", controller.POSTUser)
-	api.PUT("/users/:id", controller.PUTUser)
-	api.DELETE("/users/:id", controller.DELETEUser)
+	api.GET("/users", controller.GETUsers)          // List Users
+	api.GET("/users/:id", controller.GETUserByID)   // Get User by ID
+	api.POST("/users", controller.POSTUser)         // Create User
+	api.PUT("/users/:id", controller.PUTUser)       // Update User
+	api.DELETE("/users/:id", controller.DELETEUser) // Delete User
 }

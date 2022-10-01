@@ -10,7 +10,7 @@ package models
 
 type User struct {
 	ID       uint64 `json:"id"`
-	Name     string `json:"name"`
-	UserName string `json:"user_name"`
-	Password string `json:"password"`
+	Name     string `json:"name" binding:"required"`
+	UserName string `json:"user_name" binding:"required"`
+	Password string `json:"password" binding:"required"`
 }

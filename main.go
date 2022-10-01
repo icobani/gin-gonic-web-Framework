@@ -13,7 +13,9 @@ package main
 import (
 	"fmt"
 	"gin-gonic-web-Framework/config"
+	"gin-gonic-web-Framework/middlewares"
 	"gin-gonic-web-Framework/rooter"
+	"github.com/gin-gonic/contrib/gzip"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
@@ -22,6 +24,13 @@ import (
 func main() {
 	config.InitMockData()
 	r := gin.Default()
+	r.Use(gzip.Gzip(gzip.BestCompression))
+	r.GET("/ping", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "pong",
+		})
+	})
+
 	r.LoadHTMLGlob("templates/*")
 	r.MaxMultipartMemory = 8 << 20 // 8 MiB
 	r.POST("/upload", func(c *gin.Context) {
@@ -44,12 +53,17 @@ func main() {
 	r.GET("", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.tmpl", gin.H{
 			"title": "Minnak website",
+			"name":  "Ibrahim",
 		})
 	})
 
 	api := r.Group("")
+	api.Use(middlewares.Logger())
 	rooter.UsersRoot(api)
 	rooter.SurveyRoot(api)
 	//log.Fatal(autotls.Run(r, "example1.com", "example2.com"))
-	r.Run(":8080") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	err := r.Run(":8080")
+	if err != nil {
+		return
+	} // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
